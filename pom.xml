@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.pluspagos</groupId>
+    <artifactId>firm</artifactId>
+    <version>firm-1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>PlusPagosFirm-Java</name>
+    <description>Libreria de encriptacion de PlusPagos para Java y Android</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- Java 8 es el minimo requerido para compatibilidad con dispositivos Android
+             mas antiguos; permite usar java.util.Base64 nativo y AES/GCM sin dependencias
+             adicionales. Si no se necesita soportar Android legacy, se recomienda subir
+             a una LTS moderna (11/17/21). -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <junit.version>4.13.2</junit.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <scm>
+        <connection>scm:git:https://github.com/pluspagos/pluspagosfirm-java.git</connection>
+        <developerConnection>scm:git:git@github.com:pluspagos/pluspagosfirm-java.git</developerConnection>
+        <url>https://github.com/pluspagos/pluspagosfirm-java</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <!--
+        Distribucion del artefacto: este repositorio (para comercios que se integren
+        de aqui en adelante) publica en GitHub Packages, NO en JitPack.
+
+        A diferencia de JitPack, GitHub Packages no compila automaticamente desde un
+        tag: hay que ejecutar `mvn deploy` (o dejar que lo haga el workflow de GitHub
+        Actions incluido en .github/workflows/publish.yml al pushear un tag) con
+        credenciales que tengan permiso `write:packages` sobre este repositorio.
+
+        El repositorio anterior (github.com/asjservicios/pluspagosfirm-java), que
+        distribuye via JitPack con la coordenada
+        com.github.asjservicios:pluspagosfirm-java:firm-1.0.0, NO se toca y sigue
+        sirviendo esa version indefinidamente para los comercios ya integrados.
+    -->
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages - pluspagos/pluspagosfirm-java</name>
+            <url>https://maven.pkg.github.com/pluspagos/pluspagosfirm-java</url>
+        </repository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+            <plugins>
+                <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                    <id>attach-sources</id>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                    </execution>
+                </executions>
+                </plugin>
+                <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                    <id>attach-javadocs</id>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                    </execution>
+                </executions>
+                </plugin>
+            </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
